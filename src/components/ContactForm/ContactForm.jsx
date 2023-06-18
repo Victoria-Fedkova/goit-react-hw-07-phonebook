@@ -1,26 +1,28 @@
 import { Form, FormGroup, FormInput, AddBtn } from './ContactForm.styled';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
-import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/operations';
+import { selectContacts } from 'redux/selectors';
 
 const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const items = useSelector(selectContacts);
 
   const handleSubmit = e => {
     e.preventDefault();
     const name = e.currentTarget.elements.name.value;
-    const number = e.currentTarget.elements.number.value;
+    const phone = e.currentTarget.elements.number.value;
 
     if (
-      contacts?.find(
-        contact => contact.name.toLowerCase() === name.toLowerCase()
-      )
+      items?.find(contact => contact.name.toLowerCase() === name.toLowerCase())
     ) {
       alert(`${name} is allready in contacts`);
       return;
     }
-    dispatch(addContact(name, number));
+    const newContact = {
+      name: name,
+      phone: phone,
+    };
+    dispatch(addContact(newContact));
     e.target.reset();
   };
 

@@ -1,27 +1,32 @@
 import { Table, TableHead } from './ContatcList.styled';
 import ContactListRow from './ContactListRow/';
-import { useSelector } from 'react-redux';
-import { getContacts, getFilter } from 'redux/selectors';
-
-const getVisibleContacts = (contacts, filter) => {
-  if (filter !== '') {
-    const normalizedFilter = filter.toLowerCase();
-
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
-  } else {
-    return contacts;
-  }
-};
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectError,
+  selectIsLoading,
+  selectVisibleTasks,
+} from 'redux/selectors';
+import { useEffect } from 'react';
+import { fetchContacts } from 'redux/operations';
 
 const ContactList = () => {
-  const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter);
-  const visibleContacts = getVisibleContacts(contacts, filter);
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
+  const visibleContacts = useSelector(selectVisibleTasks);
+  const dispatch = useDispatch();
+
+  // Вызываем операцию
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return visibleContacts.length > 0 ? (
     <div>
+      {/* !!!!!! */}
+      {isLoading && <p>Loading contacts...</p>}
+      {error && <p>{error}</p>}
+      {/* !!!!!! */}
+
       <Table>
         <thead>
           <tr>
@@ -31,8 +36,8 @@ const ContactList = () => {
           </tr>
         </thead>
         <tbody>
-          {visibleContacts.map(({ id, name, number }) => (
-            <ContactListRow key={id} id={id} name={name} number={number} />
+          {visibleContacts.map(({ id, name, phone }) => (
+            <ContactListRow key={id} id={id} name={name} number={phone} />
           ))}
         </tbody>
       </Table>
