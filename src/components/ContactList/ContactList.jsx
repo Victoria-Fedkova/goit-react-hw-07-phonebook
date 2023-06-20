@@ -3,8 +3,8 @@ import ContactListRow from './ContactListRow/';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   selectError,
+  selectFilteredContacts,
   selectIsLoading,
-  selectVisibleTasks,
 } from 'redux/selectors';
 import { useEffect } from 'react';
 import { fetchContacts } from 'redux/operations';
@@ -12,20 +12,17 @@ import { fetchContacts } from 'redux/operations';
 const ContactList = () => {
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
-  const visibleContacts = useSelector(selectVisibleTasks);
+  const visibleContacts = useSelector(selectFilteredContacts);
   const dispatch = useDispatch();
 
-  // Вызываем операцию
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
   return visibleContacts.length > 0 ? (
     <div>
-      {/* !!!!!! */}
       {isLoading && <p>Loading contacts...</p>}
       {error && <p>{error}</p>}
-      {/* !!!!!! */}
 
       <Table>
         <thead>
