@@ -20,10 +20,8 @@ export const handleAddItem = (state, action) => {
   state.items.push(action.payload);
 };
 export const handleDelItem = (state, action) => {
-  return {
-    ...state,
-    items: state.items.filter(item => item.id !== action.payload.id),
-  };
+  const index = state.items.findIndex(item => item.id === action.payload.id);
+  state.items.splice(index, 1);
 };
 
 const arrThunks = [addContact, deleteContact, fetchContacts];
